@@ -1,0 +1,28 @@
+name: Test CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      working-directory: ./Sniffo/Sniffo.CLI/
+      run: dotnet restore
+    - name: Build
+      working-directory: ./Sniffo/Sniffo.CLI/
+      run: dotnet build --no-restore
+    - name: Test
+      working-directory: ./Sniffo/Sniffo.Test/
+      run: dotnet test --no-build --verbosity normal
