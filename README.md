@@ -23,4 +23,5 @@ Here is the future implementations for this project:
 
 - [ ] IPv6
 - [ ] UNIX-like SO support
+- [ ] Analytic vision of the sniffed packages
 - [ ] e2e Tests
