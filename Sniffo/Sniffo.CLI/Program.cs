@@ -1,1 +1,3 @@
-﻿new Sniffo.Core.Runner().StartSniffer();
+﻿using Sniffo.CLI;
+
+new CommandLineInterface().Start();
