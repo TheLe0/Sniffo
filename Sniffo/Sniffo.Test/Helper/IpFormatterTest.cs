@@ -5,9 +5,11 @@ using Sniffo.Helper;
 namespace Sniffo.Test
 {
     [TestClass]
+    [TestCategory("Ip formatter test")]
     public class IpFormatterTest
     {
         [TestMethod]
+        [Description("Ipv4 parsing test")]
         public void Ipv4ParsingTest()
         {
             byte _version = 4;
@@ -40,6 +42,7 @@ namespace Sniffo.Test
         }
 
         [TestMethod]
+        [Description("TCP parsing test")]
         public void TcpParsingTest()
         {
             ushort _sourcePort = 61256;
@@ -66,6 +69,7 @@ namespace Sniffo.Test
         }
 
         [TestMethod]
+        [Description("Icmp parsing test")]
         public void IcmpParsingTest()
         {
             ICMPType _type = ICMPType.EchoRequest;
