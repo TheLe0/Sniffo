@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a simple network siffer for layers 3 and 4 of the TCP/IP chain of protocols.  
+This is a simple network sniffer for layers 3 and 4 of the TCP/IP chain of protocols.  
 Currently the application sniffes the following protocols:
 
 - [X] IPv4
