@@ -44,7 +44,15 @@ namespace Sniffo.Core
 
         public string SniffedPackage()
         {
-            return IpV4Package();
+            return IPAddress?.AddressFamily switch
+            {
+                AddressFamily.InterNetwork => IpV4Package(),
+                AddressFamily.InterNetworkV6 => IpV6Package(),
+                _ => throw new NotImplementedException()
+            };
+
+            //return IpV4Package();
+            //return IpV6Package();
         }
 
         private string IpV4Package()
@@ -60,6 +68,21 @@ namespace Sniffo.Core
             var protocolIPv4 = new IPv4(buffer, bufferLength);
 
             return protocolIPv4.ToString();
+        }
+
+        private string IpV6Package()
+        {
+            if (Socket == null)
+            {
+                return "";
+            }
+
+            var buffer = new byte[ushort.MaxValue];
+            var bufferLength = Socket.Receive(buffer);
+
+            var protocolIPv6 = new IPv6(buffer, bufferLength);
+
+            return protocolIPv6.ToString();
         }
 
         private void CreateSocket()
@@ -87,10 +110,10 @@ namespace Sniffo.Core
             var ipEndPoint = new IPEndPoint(IPAddress, 0);
             Socket.Bind(ipEndPoint);
 
-            if (IPAddress.AddressFamily == AddressFamily.InterNetworkV6)
+            /*if (IPAddress.AddressFamily == AddressFamily.InterNetworkV6)
             {
                 throw new NotImplementedException("SocketOptionName.HeaderIncluded works only for IPv4.");
-            }
+            }*/
 
             Socket.SetSocketOption(
                 SocketOptionLevel.IP,
