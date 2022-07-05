@@ -16,6 +16,7 @@ namespace Sniffo.CLI
         {
             Console.WriteLine("Sniffio: A network packets Sniffer");
             Console.WriteLine("Made By: TheLe0 - Leonardo Tosin");
+            Console.WriteLine("         aimperatori - Anderson Imperatori");
             Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
             ipHandler.InitSocket(SelectIPAddress());

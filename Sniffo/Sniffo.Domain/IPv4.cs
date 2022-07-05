@@ -67,6 +67,8 @@ namespace Sniffo.Domain
             {
                 IPProtocolType.TCP => new TCP(Data, Data.Length),
                 IPProtocolType.ICMP => new ICMP(Data, Data.Length),
+                IPProtocolType.UDP => new UDP(Data, Data.Length),
+                IPProtocolType.IGMP => new IGMPv2(Data, Data.Length),
                 _ => null,
             };
         }
