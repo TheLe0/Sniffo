@@ -8,6 +8,9 @@ Currently the application sniffes the following protocols:
 - [X] IPv4
 - [X] TCP
 - [X] ICMP
+- [X] IPv6
+- [X] UDP
+- [X] IGMPv2
 
 The application currently only can be used on a Windows SO, UNIX-like is not implemented yet.
 
@@ -21,7 +24,6 @@ You only need to have in your machine to run this app installed .NET 6, there's 
 
 Here is the future implementations for this project:
 
-- [ ] IPv6
 - [ ] UNIX-like SO support
 - [ ] Analytic vision of the sniffed packages
 - [ ] e2e Tests
