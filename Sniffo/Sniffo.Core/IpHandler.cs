@@ -6,6 +6,10 @@ namespace Sniffo.Core
 {
     public class IpHandler
     {
+        private const int IOC_VENDOR = 0x18000000;
+        private const int IOC_IN = -2147483648; //0x80000000;
+        private const int SIO_RCVALL = IOC_IN | IOC_VENDOR | 1;
+
         public Socket? Socket { get; private set; }
         public IPAddress? IPAddress { get; private set; }
         public string Hostname { get; private set; }
@@ -21,17 +25,43 @@ namespace Sniffo.Core
 
             try
             {
-                Socket = new Socket(
-                    IPAddress.AddressFamily,
+                switch (IPAddress?.AddressFamily)
+                {
+                    case AddressFamily.InterNetwork:
+                        InitSocketIPv4();
+                            break;
+                    case AddressFamily.InterNetworkV6:
+                        InitSocketIPv6();
+                        break;
+                    default:
+                        throw new NotImplementedException();
+                };
+            } 
+            catch (SocketException e)
+            {
+                Console.WriteLine(e.Message);
+                Console.WriteLine("Error: The socket could be not initialize. Verify your user permissions and if there's a firewall on the socket port");
+            }
+        }
+
+        public void InitSocketIPv4()
+        {
+            Socket = new Socket(
+                    AddressFamily.InterNetwork,
                     SocketType.Raw,
                     ProtocolType.IP);
 
-                CreateSocket();
-            } 
-            catch (SocketException)
-            {
-                Console.WriteLine("Error: The socket could be not initialize. Verify your user permissions and if there's a firewall on the socket port");
-            }
+            CreateWindowsSocketIPv4();
+        }
+
+        public void InitSocketIPv6()
+        {
+            Socket = new Socket(
+                    AddressFamily.InterNetworkV6,
+                    SocketType.Raw,
+                    ProtocolType.IP);
+
+            CreateWindowsSocketIPv6();
         }
 
         public IPAddress[] GetAllAvaliableIp()
@@ -50,9 +80,6 @@ namespace Sniffo.Core
                 AddressFamily.InterNetworkV6 => IpV6Package(),
                 _ => throw new NotImplementedException()
             };
-
-            //return IpV4Package();
-            //return IpV6Package();
         }
 
         private string IpV4Package()
@@ -85,7 +112,7 @@ namespace Sniffo.Core
             return protocolIPv6.ToString();
         }
 
-        private void CreateSocket()
+        /*private void CreateSocket()
         {
             switch (Environment.OSVersion.Platform)
             {
@@ -98,9 +125,9 @@ namespace Sniffo.Core
                 default:
                     throw new NotImplementedException("SocketType.Raw not mapped OS.");
             }
-        }
+        }*/
 
-        private void CreateWindowsSocket()
+        private void CreateWindowsSocketIPv4()
         {
             if (IPAddress == null || Socket == null)
             {
@@ -110,15 +137,10 @@ namespace Sniffo.Core
             var ipEndPoint = new IPEndPoint(IPAddress, 0);
             Socket.Bind(ipEndPoint);
 
-            /*if (IPAddress.AddressFamily == AddressFamily.InterNetworkV6)
-            {
-                throw new NotImplementedException("SocketOptionName.HeaderIncluded works only for IPv4.");
-            }*/
-
             Socket.SetSocketOption(
-                SocketOptionLevel.IP,
-                SocketOptionName.HeaderIncluded, // `HeaderIncluded` works only for IPv4.
-                true);
+                 SocketOptionLevel.IP,
+                 SocketOptionName.HeaderIncluded, // `HeaderIncluded` works only for IPv4.
+                 true);
 
             if (Environment.OSVersion.Platform != PlatformID.Win32NT)
             {
@@ -131,6 +153,19 @@ namespace Sniffo.Core
                 IOControlCode.ReceiveAll, // `ReceiveAll` works only on Windows.
                 optionIn,
                 optionOut);
+        }
+
+        private void CreateWindowsSocketIPv6()
+        {
+            if (IPAddress == null || Socket == null)
+            {
+                return;
+            }
+
+            var ipEndPoint = new IPEndPoint(IPAddress, 0);
+            Socket.Bind(ipEndPoint);
+
+            Socket.IOControl(SIO_RCVALL, BitConverter.GetBytes((int)1), null);
         }
 
         private void CreateUnixSocket()

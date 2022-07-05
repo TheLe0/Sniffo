@@ -51,6 +51,13 @@ namespace Sniffo.Helper
             return (field + ": ").PadLeft(padding) + binary + " = " + ip;
         }
 
+        public static string IPv6(string field, IPAddress _IPAddress)
+        {
+            
+            return (field + ": ").PadLeft(0) + " = " + _IPAddress;
+        }
+
+
         /// Referencia: https://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml#protocol-numbers-1
         public static string NextHeader(byte _nextHeader)
         {
