@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Sniffo.Domain
+﻿namespace Sniffo.Domain
 {
     public enum IGMPType : byte
     {
