@@ -5,48 +5,40 @@ namespace Sniffo.CLI
 {
     public class CommandLineInterface
     {
-        private IpHandler ipHandler;
-
-        public CommandLineInterface()
-        {
-            ipHandler = new IpHandler();
-        }
-
         public void Start()
         {
             Console.WriteLine("Sniffio: A network packets Sniffer");
             Console.WriteLine("Made By: TheLe0 - Leonardo Tosin");
             Console.WriteLine("         aimperatori - Anderson Imperatori");
-            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
 
-            ipHandler.InitSocket(SelectIPAddress());
-
-            if (ipHandler.Socket == null)
+            try
             {
-                return;
+                var ipHandler = IpFactory.CreateIpHandler(SelectIPAddress());
+
+                Console.WriteLine("IP: " + ipHandler.IPAddress);
+
+                do
+                {
+                    Console.WriteLine("## [ {0:yyyy-MM-dd HH:mm:ss.fff} ] ##".PadLeft(80, '#'), DateTime.Now);
+
+                    Console.WriteLine(ipHandler.SniffedPackage());
+                } while (Console.KeyAvailable == false || Console.ReadKey().Key != ConsoleKey.Escape);
+
             }
-
-            Console.WriteLine("IP: " + ipHandler.IPAddress);
-
-            if (ipHandler.Socket == null)
+            catch (Exception ex)
             {
-                Console.WriteLine("Error: The socket was not initialized!");
-                return;
+                Console.WriteLine(ex.Message);
             }
-
-            do
-            {
-                Console.WriteLine("## [ {0:yyyy-MM-dd HH:mm:ss.fff} ] ##".PadLeft(80, '#'), DateTime.Now);
-
-                Console.WriteLine(ipHandler.SniffedPackage());
-            } while (Console.KeyAvailable == false || Console.ReadKey().Key != ConsoleKey.Escape);
         }
 
         private IPAddress SelectIPAddress()
         {
-            Console.WriteLine("Computador: " + ipHandler.Hostname);
+            var dnsHandler = new DnsHandler();
 
-            var ipAddresses = ipHandler.GetAllAvaliableIp();
+            Console.WriteLine("Computador: " + dnsHandler.Hostname);
+
+            var ipAddresses = dnsHandler.GetAllAvaliableIp();
 
             Console.WriteLine("Endereços IP:");
             for (var i = 0; i < ipAddresses.Length; i++)
