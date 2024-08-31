@@ -53,7 +53,6 @@ namespace Sniffo.Helper
 
         public static string IPv6(string field, IPAddress _IPAddress)
         {
-            
             return (field + ": ").PadLeft(0) + " = " + _IPAddress;
         }
 
@@ -205,7 +204,7 @@ namespace Sniffo.Helper
                 141 => "WESP -> Wrapped Encapsulating Security Payload",
                 142 => "ROHC -> Robust Header Compression",
                 143 => "Ethernet -> Ethernet",
-                _ => throw new NotImplementedException()
+                _ => throw new NotImplementedException($"Next header {_nextHeader} not implemented.")
             };
 
             return ("Next Header Type: ").PadLeft(padding) + description.PadLeft(32);

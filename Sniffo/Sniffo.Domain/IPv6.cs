@@ -1,5 +1,4 @@
 ﻿using Sniffo.Helper;
-using System.Net;
 using System.Text;
 
 namespace Sniffo.Domain
@@ -24,7 +23,7 @@ namespace Sniffo.Domain
         public byte[] Data { get; private set; }
         public object? DataAsProtocol { get; private set; }
 
-        
+
         public IPv6(byte[] data, int length) : base(length)
         {
             var stream = new BinaryReader(new MemoryStream(data));
@@ -68,7 +67,7 @@ namespace Sniffo.Domain
                 _ => null,
             };
         }
-        
+
         public override string ToString()
         {
             var result = new StringBuilder();
